@@ -39,11 +39,12 @@ def export_log(log_text,file_name):
 
 # ボクサーのクラス
 class Boxer:
-    def __init__(self, corner, name):
+    def __init__(self, corner, name, fav_blow):
         # ボクサーのコーナー（赤or青）
         self.corner = corner
         # ボクサーの名前
         self.name = name
+        self.fav_blow = fav_blow
         # 状態
         self.status = 0
         # 1ラウンドごとの優勢に回った回数
@@ -111,7 +112,7 @@ def print_status(blue_boxer,red_boxer,log_text,STATUS):
     return blue_boxer,red_boxer,log_text
 
 # 青コーナー優勢
-def blue_superiority(DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,STRONG_DOWN):
+def blue_superiority(DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,STRONG_DOWN,FAV_BLOW):
     # 状態が6（SS）未満の場合
     if blue_boxer.status < 6:
         # 状態を1段階上げる
@@ -119,7 +120,7 @@ def blue_superiority(DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DO
     # 優勢に回った回数を1加算
     blue_boxer.attack_num += 1
     # 出力するテキスト
-    print_text = '{}コーナー・{}選手の優勢。'.format(blue_boxer.corner,blue_boxer.name)
+    print_text = '「{name}選手のパンチが何度もヒット！」\n「{name}選手が優勢に試合を進めています」\n「{name}選手の状態が{status}に上昇しました」'.format(name=blue_boxer.name,status=STATUS[blue_boxer.status])
     # テキストを出力
     print(print_text)
     # ログにテキストを追加
@@ -130,7 +131,7 @@ def blue_superiority(DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DO
     return blue_boxer,red_boxer,log_text
 
 # 赤コーナー優勢
-def red_superiority(DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,STRONG_DOWN):
+def red_superiority(DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,STRONG_DOWN,FAV_BLOW):
     # 状態が6（SS）未満の場合
     if red_boxer.status < 6:
         # 状態を1段階上げる
@@ -138,7 +139,7 @@ def red_superiority(DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOW
     # 優勢に回った回数を1加算
     red_boxer.attack_num += 1
     # 出力するテキスト
-    print_text = '{}コーナー・{}選手の優勢。'.format(red_boxer.corner,red_boxer.name)
+    print_text = '「{name}選手のパンチが何度もヒット！」\n「{name}選手が優勢に試合を進めています」\n「{name}選手の状態が{status}に上昇しました」'.format(name=red_boxer.name,status=STATUS[red_boxer.status])
     # テキストを出力
     print(print_text)
     # ログにテキストを追加
@@ -149,9 +150,9 @@ def red_superiority(DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOW
     return blue_boxer,red_boxer,log_text
 
 # 互角
-def evenness(DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,STRONG_DOWN):
+def evenness(DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,STRONG_DOWN,FAV_BLOW):
     # 出力するテキスト
-    print_text = '両者互角。'
+    print_text = '「両者互角の攻防が続いてます！」'
     # テキストを出力
     print(print_text)
     # ログにテキストを追加
@@ -162,7 +163,7 @@ def evenness(DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,STRON
     return blue_boxer,red_boxer,log_text
 
 # クリンチ
-def clinch(DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,STRONG_DOWN):
+def clinch(DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,STRONG_DOWN,FAV_BLOW):
     # 青コーナーボクサーのステータスがSA以上SS以下の場合、Sに落とす
     if blue_boxer.status >= 4:
         blue_boxer.status = 3
@@ -176,7 +177,7 @@ def clinch(DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,STRONG_
     elif red_boxer.status <= 3 and red_boxer.status > 0:
         red_boxer.status -= 1
     # 出力するテキスト
-    print_text = '両者クリンチ。'
+    print_text = '「両者クリンチです」\n「{blue_name}選手の状態が{blue_status}に下がり、{red_name}選手の状態が{red_status}に下がりました」'.format(blue_name=blue_boxer.name,blue_status=STATUS[blue_boxer.status],red_name=red_boxer.name,red_status=STATUS[red_boxer.status])
     # テキストを出力
     print(print_text)
     # ログにテキストを追加
@@ -187,7 +188,7 @@ def clinch(DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,STRONG_
     return blue_boxer,red_boxer,log_text
 
 # 青コーナーカウンター
-def blue_counter(DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,STRONG_DOWN):
+def blue_counter(DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,STRONG_DOWN,FAV_BLOW):
     # 青コーナーの状態が6（SS）未満の場合
     if blue_boxer.status < 6:
         # 状態を1段階上げる
@@ -201,7 +202,7 @@ def blue_counter(DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,S
     # 優勢に回った回数を1加算
     blue_boxer.attack_num += 1
     # 出力するテキスト
-    print_text = '{}コーナー・{}選手が{}コーナー・{}選手にカウンター。'.format(blue_boxer.corner,blue_boxer.name,red_boxer.corner,red_boxer.name)
+    print_text = '「{blue_name}選手のカウンターパンチが{red_name}選手にヒットしました！」\n「{blue_name}選手の状態が{blue_status}に上昇し、{red_name}選手の状態が{red_status}に下がりました」'.format(blue_name=blue_boxer.name,blue_status=STATUS[blue_boxer.status],red_name=red_boxer.name,red_status=STATUS[red_boxer.status])
     # テキストを出力
     print(print_text)
     # ログにテキストを追加
@@ -212,7 +213,7 @@ def blue_counter(DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,S
     return blue_boxer,red_boxer,log_text
 
 # 赤コーナーカウンター
-def red_counter(DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,STRONG_DOWN):
+def red_counter(DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,STRONG_DOWN,FAV_BLOW):
     # 赤コーナーの状態が6（SS）未満の場合
     if red_boxer.status < 6:
         # 状態を1段階上げる
@@ -226,7 +227,7 @@ def red_counter(DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,ST
     # 優勢に回った回数を1加算
     red_boxer.attack_num += 1
     # 出力するテキスト
-    print_text = '{}コーナー・{}選手が{}コーナー・{}選手にカウンター。'.format(red_boxer.corner,red_boxer.name,blue_boxer.corner,blue_boxer.name)
+    print_text = '「{red_name}選手のカウンターパンチが{blue_name}選手にヒットしました！」\n「{red_name}選手の状態が{red_status}に上昇し、{blue_name}選手の状態が{blue_status}に下がりました」'.format(blue_name=blue_boxer.name,blue_status=STATUS[blue_boxer.status],red_name=red_boxer.name,red_status=STATUS[red_boxer.status])
     # テキストを出力
     print(print_text)
     # ログにテキストを追加
@@ -237,7 +238,7 @@ def red_counter(DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,ST
     return blue_boxer,red_boxer,log_text
 
 # 相打ち
-def draw(DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,STRONG_DOWN):
+def draw(DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,STRONG_DOWN,FAV_BLOW):
     # 青コーナーの状態が0以上かつ6（SS）未満の場合
     if blue_boxer.status < 6 and blue_boxer.status >= 0:
         # 状態を1段階上げる
@@ -247,7 +248,7 @@ def draw(DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,STRONG_DO
         # 状態を1段階上げる
         red_boxer.status += 1
     # 出力するテキスト
-    print_text = '両者相打ち。'
+    print_text = '「{blue_name}選手と{red_name}選手のパンチがお互いにヒット！！　両者相打ちです！！」'.format(blue_name=blue_boxer.name,red_name=red_boxer.name)
     # テキストを出力
     print(print_text)
     # ログにテキストを追加
@@ -258,7 +259,7 @@ def draw(DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,STRONG_DO
     return blue_boxer,red_boxer,log_text
 
 # 青コーナーダウン
-def blue_downed(DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,STRONG_DOWN):
+def blue_downed(DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,STRONG_DOWN,FAV_BLOW):
     # ラウンドあたりのダウン数に1加算
     blue_boxer.round_down_num += 1
     # 試合トータルでのダウン数に1加算
@@ -272,7 +273,7 @@ def blue_downed(DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,ST
         # ステータスをSに更新
         red_boxer.status = 3
     # 出力するテキスト
-    print_text = '{}コーナー・{}選手、ダウン。'.format(blue_boxer.corner,blue_boxer.name)
+    print_text = '「{red_name}選手のパンチで{blue_name}選手がダウン！」\n「レフェリーがカウントを数えます！」\n「{red_name}選手の状態は{red_status}に上昇しています！」'.format(blue_name=blue_boxer.name,red_name=red_boxer.name,red_status=STATUS[red_boxer.status])
     # テキストを出力
     print(print_text)
     # ログにテキストを追加
@@ -306,10 +307,14 @@ def blue_downed(DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,ST
             elif blue_boxer.total_down_num == 2:
                 # DOWN['down_2']のダイス出目に応じた関数を実行する
                 blue_boxer,log_text = DOWN['down_2'][dice_roll](blue_boxer,log_text)
-            # 3回以上の場合
+            # 3回の場合
+            elif blue_boxer.total_down_num == 3:
+                # DOWN['down_3']のダイス出目に応じた関数を実行する
+                blue_boxer,log_text = DOWN['down_3'][dice_roll](blue_boxer,log_text)
+            # 4回以上の場合
             else:
                 # DOWN['down_3_or_more']のダイス出目に応じた関数を実行する
-                blue_boxer,log_text = DOWN['down_3_or_more'][dice_roll](blue_boxer,log_text)
+                blue_boxer,log_text = DOWN['down_4_or_more'][dice_roll](blue_boxer,log_text)
     # フリーノックダウン制の場合
     else:
         # 試合トータルでのダウン数が5回以上でTKO
@@ -334,14 +339,18 @@ def blue_downed(DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,ST
             elif blue_boxer.total_down_num == 2:
                 # DOWN['down_2']のダイス出目に応じた関数を実行する
                 blue_boxer,log_text = DOWN['down_2'][dice_roll](blue_boxer,log_text)
-            # 3回以上の場合
+            # 3回の場合
+            elif blue_boxer.total_down_num == 3:
+                # DOWN['down_3']のダイス出目に応じた関数を実行する
+                blue_boxer,log_text = DOWN['down_3'][dice_roll](blue_boxer,log_text)
+            # 4回以上の場合
             else:
                 # DOWN['down_3_or_more']のダイス出目に応じた関数を実行する
-                blue_boxer,log_text = DOWN['down_3_or_more'][dice_roll](blue_boxer,log_text)
+                blue_boxer,log_text = DOWN['down_4_or_more'][dice_roll](blue_boxer,log_text)
     return blue_boxer,red_boxer,log_text
 
 # 赤コーナーダウン
-def red_downed(DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,STRONG_DOWN):
+def red_downed(DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,STRONG_DOWN,FAV_BLOW):
     # ラウンドあたりのダウン数に1加算
     red_boxer.round_down_num += 1
     # 試合トータルでのダウン数に1加算
@@ -355,7 +364,7 @@ def red_downed(DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,STR
         # ステータスをSに更新
         blue_boxer.status = 3
     # 出力するテキスト
-    print_text = '{}コーナー・{}選手、ダウン。'.format(red_boxer.corner,red_boxer.name)
+    print_text = '「{blue_name}選手のパンチで{red_name}選手がダウン！」\n「レフェリーがカウントを数えます！」\n「{blue_name}選手の状態は{blue_status}に上昇しています！」'.format(blue_name=blue_boxer.name,blue_status=STATUS[blue_boxer.status],red_name=red_boxer.name)
     # テキストを出力
     print(print_text)
     # ログにテキストを追加
@@ -389,10 +398,14 @@ def red_downed(DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,STR
             elif red_boxer.total_down_num == 2:
                 # DOWN['down_2']のダイス出目に応じた関数を実行する
                 red_boxer,log_text = DOWN['down_2'][dice_roll](red_boxer,log_text)
-            # 3回以上の場合
+            # 3回の場合
+            elif red_boxer.total_down_num == 3:
+                # DOWN['down_3']のダイス出目に応じた関数を実行する
+                red_boxer,log_text = DOWN['down_3'][dice_roll](red_boxer,log_text)
+            # 4回以上の場合
             else:
                 # DOWN['down_3_or_more']のダイス出目に応じた関数を実行する
-                red_boxer,log_text = DOWN['down_3_or_more'][dice_roll](red_boxer,log_text)
+                red_boxer,log_text = DOWN['down_4_or_more'][dice_roll](red_boxer,log_text)
     # フリーノックダウン制の場合
     else:
         # 試合トータルでのダウン数が5回以上でTKO
@@ -417,14 +430,18 @@ def red_downed(DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,STR
             elif red_boxer.total_down_num == 2:
                 # DOWN['down_2']のダイス出目に応じた関数を実行する
                 red_boxer,log_text = DOWN['down_2'][dice_roll](red_boxer,log_text)
-            # 3回以上の場合
+            # 3回の場合
+            elif red_boxer.total_down_num == 3:
+                # DOWN['down_3']のダイス出目に応じた関数を実行する
+                red_boxer,log_text = DOWN['down_3'][dice_roll](red_boxer,log_text)
+            # 4回以上の場合
             else:
                 # DOWN['down_3_or_more']のダイス出目に応じた関数を実行する
-                red_boxer,log_text = DOWN['down_3_or_more'][dice_roll](red_boxer,log_text)
+                red_boxer,log_text = DOWN['down_4_or_more'][dice_roll](red_boxer,log_text)
     return blue_boxer,red_boxer,log_text
 
 # 青コーナー強烈ダウン
-def blue_strong_downed(DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,STRONG_DOWN):
+def blue_strong_downed(DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,STRONG_DOWN,FAV_BLOW):
     # ラウンドあたりのダウン数に1加算
     blue_boxer.round_down_num += 1
     # 試合トータルでのダウン数に1加算
@@ -438,7 +455,7 @@ def blue_strong_downed(DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,
         # ステータスをSに更新
         red_boxer.status = 3
     # 出力するテキスト
-    print_text = '{}コーナー・{}選手、強烈ダウン。'.format(blue_boxer.corner,blue_boxer.name)
+    print_text = '「{red_name}選手の{red_fav_blow}で{blue_name}選手がダウン！」\n「これは強烈なパンチがヒットしました！」\n「{blue_name}選手、大の字に倒れて動けません！」'.format(blue_name=blue_boxer.name,red_name=red_boxer.name,red_fav_blow=FAV_BLOW[red_boxer.fav_blow])
     # テキストを出力
     print(print_text)
     # ログにテキストを追加
@@ -487,7 +504,7 @@ def blue_strong_downed(DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,
     return blue_boxer,red_boxer,log_text
 
 # 赤コーナー強烈ダウン
-def red_strong_downed(DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,STRONG_DOWN):
+def red_strong_downed(DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,STRONG_DOWN,FAV_BLOW):
     # ラウンドあたりのダウン数に1加算
     red_boxer.round_down_num += 1
     # 試合トータルでのダウン数に1加算
@@ -501,7 +518,7 @@ def red_strong_downed(DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,D
         # ステータスをSに更新
         blue_boxer.status = 3
     # 出力するテキスト
-    print_text = '{}コーナー・{}選手、強烈ダウン。'.format(red_boxer.corner,red_boxer.name)
+    print_text = '「{blue_name}選手の{blue_fav_blow}で{red_name}選手がダウン！」\n「これは強烈なパンチがヒットしました！」\n「{red_name}選手、大の字に倒れて動けません！」'.format(blue_name=blue_boxer.name,red_name=red_boxer.name,blue_fav_blow=FAV_BLOW[blue_boxer.fav_blow])
     # テキストを出力
     print(print_text)
     # ログにテキストを追加
@@ -550,7 +567,7 @@ def red_strong_downed(DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,D
     return blue_boxer,red_boxer,log_text
 
 # ダブルノックダウン
-def double_knock_down(DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,STRONG_DOWN):
+def double_knock_down(DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,STRONG_DOWN,FAV_BLOW):
     # ラウンドあたりのダウン数に1加算
     blue_boxer.round_down_num += 1
     # 試合トータルでのダウン数に1加算
@@ -841,7 +858,7 @@ def ko(downed_boxer,log_text):
     # conclusionを'KO'とする
     downed_boxer.conclusion = 'KO'
     # 出力するテキスト
-    print_text = '{}コーナー・{}選手、KO。'.format(downed_boxer.corner,downed_boxer.name)
+    print_text = 'カーンカーンカーン！\n「{name}選手、立つことが出来ません！！　10カウントが数え上げられました！！」'.format(name=downed_boxer.name)
     # テキストを出力
     print(print_text)
     # ログにテキストを追加
@@ -855,7 +872,7 @@ def tko(downed_boxer,log_text):
     # conclusionを'TKO'とする
     downed_boxer.conclusion = 'TKO'
     # 出力するテキスト
-    print_text = '{}コーナー・{}選手、TKO。'.format(downed_boxer.corner,downed_boxer.name)
+    print_text = 'カーンカーンカーン！\n「レフェリーが試合を止めました！　{name}選手、立ち上がれず！！」'.format(name=downed_boxer.name)
     # テキストを出力
     print(print_text)
     # ログにテキストを追加
@@ -865,7 +882,7 @@ def tko(downed_boxer,log_text):
 # カウント8で立つ
 def standup_8(downed_boxer,log_text):
     # 出力するテキスト
-    print_text = '{}コーナー・{}選手、カウント8で立ち上がる。'.format(downed_boxer.corner,downed_boxer.name)
+    print_text = '「{name}選手、カウント8で立ち上がりました！　試合再開です！」'.format(name=downed_boxer.name)
     # テキストを出力
     print(print_text)
     # ログにテキストを追加
@@ -875,7 +892,7 @@ def standup_8(downed_boxer,log_text):
 # カウント9で立つ
 def standup_9(downed_boxer,log_text):
     # 出力するテキスト
-    print_text = '{}コーナー・{}選手、カウント9で立ち上がる。'.format(downed_boxer.corner,downed_boxer.name)
+    print_text = '「{name}選手、カウント9で立ち上がりました！　試合再開です！」'.format(name=downed_boxer.name)
     # テキストを出力
     print(print_text)
     # ログにテキストを追加
@@ -910,7 +927,8 @@ STATUS = {0:'ノーマル',1:'A',2:'AA',3:'S',4:'SA',5:'SAA',6:'SS'}
 DOWN = {
     'down_1':{1:ko,2:ko,3:standup_8,4:standup_8,5:standup_8,6:standup_8,7:standup_8,8:standup_8,9:standup_8,10:standup_8,11:standup_9,12:standup_9},
     'down_2':{1:ko,2:ko,3:tko,4:standup_8,5:standup_8,6:standup_8,7:standup_8,8:standup_8,9:standup_9,10:standup_9,11:standup_9,12:standup_9},
-    'down_3_or_more':{1:ko,2:ko,3:ko,4:tko,5:standup_8,6:standup_8,7:standup_8,8:standup_8,9:standup_9,10:standup_9,11:standup_9,12:standup_9}
+    'down_3':{1:ko,2:ko,3:ko,4:tko,5:standup_8,6:standup_8,7:standup_8,8:standup_8,9:standup_9,10:standup_9,11:standup_9,12:standup_9},
+    'down_4_or_more':{1:ko,2:ko,3:ko,4:tko,5:tko,6:standup_8,7:standup_8,8:standup_8,9:standup_9,10:standup_9,11:standup_9,12:standup_9}
 }
 
 # 強烈ダウン時ダイス
@@ -919,14 +937,26 @@ STRONG_DOWN = {1:ko,2:ko,3:ko,4:tko,5:tko,6:standup_9,7:standup_9,8:standup_9,9:
 # ノックダウン方式
 KNOCKDOWN_TYPE = {0:'3ノックダウン',1:'フリーノックダウン'}
 
+FAV_BLOW = ['ストレート','フック','ボディブロー','アッパーカット']
+
 # ダイス（12面ダイス1個）作成
 DICE = Dice(1,12)
 
 # ボクサー作成関数
-def make_boxer(corner):
+def make_boxer(FAV_BLOW,corner):
     name = input('{}コーナーのボクサーを作成します。名前を入力してください:'.format(corner))
-    boxer = Boxer(corner,name)
-    return boxer
+    while True:
+        try:
+            fav_blow = int(input('得意ブローを次の中から選択してください。\n0:{}\n1:{}\n2:{}\n3:{}:'.format(FAV_BLOW[0],FAV_BLOW[1],FAV_BLOW[2],FAV_BLOW[3])))
+        except ValueError:
+            print("数字を入力してください。")
+        else:
+            if fav_blow < 0 or fav_blow > 3:
+                print('0から3で選択してください。')
+            else:
+                boxer = Boxer(corner,name,fav_blow)
+                print('得意ブロー：{}'.format(FAV_BLOW[fav_blow]))
+                return boxer
 
 # ノックダウン方式決定関数
 def decide_knockdown_type(KNOCKDOWN_TYPE):
@@ -960,7 +990,7 @@ def decide_round_num():
                 return round_num
 
 # 試合関数
-def match(DICE,DICE_TABLE,STATUS,DOWN,STRONG_DOWN,KNOCKDOWN_TYPE,knockdown_type,round_num,FIGHT_LOG_DIR,blue_boxer,red_boxer):
+def match(DICE,DICE_TABLE,FAV_BLOW,STATUS,DOWN,STRONG_DOWN,KNOCKDOWN_TYPE,knockdown_type,round_num,FIGHT_LOG_DIR,blue_boxer,red_boxer):
     # 開始時刻
     fight_datetime = datetime.now().strftime("%Y%m%d%H%M%S")
     # ログファイル名
@@ -987,6 +1017,8 @@ def match(DICE,DICE_TABLE,STATUS,DOWN,STRONG_DOWN,KNOCKDOWN_TYPE,knockdown_type,
     print(print_text)
     # ログにテキストを追加
     log_text.append(print_text)
+    # ログに空白行を追加
+    log_text.append('')
     # 現在のラウンドが最大ラウンド以下かつ両者のresultが空白の間ループ
     while current_round <= max_round and red_boxer.result == '' and blue_boxer.result == '':
         # 入力を待つ
@@ -1010,39 +1042,39 @@ def match(DICE,DICE_TABLE,STATUS,DOWN,STRONG_DOWN,KNOCKDOWN_TYPE,knockdown_type,
         # 入力を待つ
         input()
         if blue_boxer.status == 0 and red_boxer.status == 0:
-            blue_boxer,red_boxer,log_text = DICE_TABLE['normal'][dice_roll](DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,STRONG_DOWN)
+            blue_boxer,red_boxer,log_text = DICE_TABLE['normal'][dice_roll](DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,STRONG_DOWN,FAV_BLOW)
         elif blue_boxer.status == 1 and red_boxer.status == 0:
-            blue_boxer,red_boxer,log_text = DICE_TABLE['blue_A'][dice_roll](DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,STRONG_DOWN)
+            blue_boxer,red_boxer,log_text = DICE_TABLE['blue_A'][dice_roll](DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,STRONG_DOWN,FAV_BLOW)
         elif blue_boxer.status == 2 and red_boxer.status == 0:
-            blue_boxer,red_boxer,log_text = DICE_TABLE['blue_AA'][dice_roll](DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,STRONG_DOWN)
+            blue_boxer,red_boxer,log_text = DICE_TABLE['blue_AA'][dice_roll](DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,STRONG_DOWN,FAV_BLOW)
         elif blue_boxer.status == 1 and red_boxer.status == 1:
-            blue_boxer,red_boxer,log_text = DICE_TABLE['blue_A_red_A'][dice_roll](DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,STRONG_DOWN)
+            blue_boxer,red_boxer,log_text = DICE_TABLE['blue_A_red_A'][dice_roll](DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,STRONG_DOWN,FAV_BLOW)
         elif blue_boxer.status == 2 and red_boxer.status == 1:
-            blue_boxer,red_boxer,log_text = DICE_TABLE['blue_AA_red_A'][dice_roll](DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,STRONG_DOWN)
+            blue_boxer,red_boxer,log_text = DICE_TABLE['blue_AA_red_A'][dice_roll](DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,STRONG_DOWN,FAV_BLOW)
         elif blue_boxer.status == 1 and red_boxer.status == 2:
-            blue_boxer,red_boxer,log_text = DICE_TABLE['blue_A_red_AA'][dice_roll](DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,STRONG_DOWN)
+            blue_boxer,red_boxer,log_text = DICE_TABLE['blue_A_red_AA'][dice_roll](DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,STRONG_DOWN,FAV_BLOW)
         elif blue_boxer.status == 2 and red_boxer.status == 2:
-            blue_boxer,red_boxer,log_text = DICE_TABLE['blue_AA_red_AA'][dice_roll](DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,STRONG_DOWN)
+            blue_boxer,red_boxer,log_text = DICE_TABLE['blue_AA_red_AA'][dice_roll](DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,STRONG_DOWN,FAV_BLOW)
         elif blue_boxer.status == 0 and red_boxer.status == 1:
-            blue_boxer,red_boxer,log_text = DICE_TABLE['red_A'][dice_roll](DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,STRONG_DOWN)
+            blue_boxer,red_boxer,log_text = DICE_TABLE['red_A'][dice_roll](DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,STRONG_DOWN,FAV_BLOW)
         elif blue_boxer.status == 0 and red_boxer.status == 2:
-            blue_boxer,red_boxer,log_text = DICE_TABLE['red_AA'][dice_roll](DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,STRONG_DOWN)
+            blue_boxer,red_boxer,log_text = DICE_TABLE['red_AA'][dice_roll](DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,STRONG_DOWN,FAV_BLOW)
         elif (blue_boxer.status >= 3 and blue_boxer.status <= 5) and red_boxer.status <= 2:
-            blue_boxer,red_boxer,log_text = DICE_TABLE['blue_S'][dice_roll](DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,STRONG_DOWN)
+            blue_boxer,red_boxer,log_text = DICE_TABLE['blue_S'][dice_roll](DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,STRONG_DOWN,FAV_BLOW)
         elif blue_boxer.status == 6 and red_boxer.status <= 2:
-            blue_boxer,red_boxer,log_text = DICE_TABLE['blue_SS'][dice_roll](DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,STRONG_DOWN)
+            blue_boxer,red_boxer,log_text = DICE_TABLE['blue_SS'][dice_roll](DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,STRONG_DOWN,FAV_BLOW)
         elif (blue_boxer.status >= 3 and blue_boxer.status <= 5) and (red_boxer.status >= 3 and red_boxer.status <= 5):
-            blue_boxer,red_boxer,log_text = DICE_TABLE['blue_S_red_S'][dice_roll](DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,STRONG_DOWN)
+            blue_boxer,red_boxer,log_text = DICE_TABLE['blue_S_red_S'][dice_roll](DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,STRONG_DOWN,FAV_BLOW)
         elif blue_boxer.status == 6 and (red_boxer.status >= 3 and red_boxer.status <= 5):
-            blue_boxer,red_boxer,log_text = DICE_TABLE['blue_SS_red_S'][dice_roll](DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,STRONG_DOWN)
+            blue_boxer,red_boxer,log_text = DICE_TABLE['blue_SS_red_S'][dice_roll](DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,STRONG_DOWN,FAV_BLOW)
         elif blue_boxer.status <= 2 and (red_boxer.status >= 3 and red_boxer.status <= 5):
-            blue_boxer,red_boxer,log_text = DICE_TABLE['red_S'][dice_roll](DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,STRONG_DOWN)
+            blue_boxer,red_boxer,log_text = DICE_TABLE['red_S'][dice_roll](DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,STRONG_DOWN,FAV_BLOW)
         elif blue_boxer.status <= 2 and red_boxer.status == 6:
-            blue_boxer,red_boxer,log_text = DICE_TABLE['red_SS'][dice_roll](DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,STRONG_DOWN)
+            blue_boxer,red_boxer,log_text = DICE_TABLE['red_SS'][dice_roll](DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,STRONG_DOWN,FAV_BLOW)
         elif (blue_boxer.status >= 3 and blue_boxer.status <= 5) and red_boxer.status == 6:
-            blue_boxer,red_boxer,log_text = DICE_TABLE['blue_S_red_SS'][dice_roll](DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,STRONG_DOWN)
+            blue_boxer,red_boxer,log_text = DICE_TABLE['blue_S_red_SS'][dice_roll](DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,STRONG_DOWN,FAV_BLOW)
         elif blue_boxer.status == 6 and red_boxer.status == 6:
-            blue_boxer,red_boxer,log_text = DICE_TABLE['blue_SS_red_SS'][dice_roll](DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,STRONG_DOWN)
+            blue_boxer,red_boxer,log_text = DICE_TABLE['blue_SS_red_SS'][dice_roll](DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,STRONG_DOWN,FAV_BLOW)
         # 入力を待つ
         input()
         if blue_boxer.result == '●' and red_boxer.result == '●':
@@ -1069,7 +1101,7 @@ def match(DICE,DICE_TABLE,STATUS,DOWN,STRONG_DOWN,KNOCKDOWN_TYPE,knockdown_type,
             # 赤のresultを'〇'にする
             red_boxer.result = '〇'
             # 出力するテキスト
-            print_text = '{}コーナー・{}選手の勝利。'.format(red_boxer.corner,red_boxer.name)
+            print_text = '「{name}選手の{conclusion}勝利です！！」'.format(name=red_boxer.name,conclusion=blue_boxer.conclusion)
             # テキストを出力
             print(print_text)
             # ログにテキストを追加
@@ -1091,7 +1123,7 @@ def match(DICE,DICE_TABLE,STATUS,DOWN,STRONG_DOWN,KNOCKDOWN_TYPE,knockdown_type,
             # 青のresultを'〇'にする
             blue_boxer.result = '〇'
             # 出力するテキスト
-            print_text = '{}コーナー・{}選手の勝利。'.format(blue_boxer.corner,blue_boxer.name)
+            print_text = '「{name}選手の{conclusion}勝利です！！」'.format(name=blue_boxer.name,conclusion=red_boxer.conclusion)
             # テキストを出力
             print(print_text)
             # ログにテキストを追加
@@ -1110,6 +1142,8 @@ def match(DICE,DICE_TABLE,STATUS,DOWN,STRONG_DOWN,KNOCKDOWN_TYPE,knockdown_type,
             export_log(log_text,file_name)
             return
         if current_turn == 5:
+            # ログに空白行を追加
+            log_text.append('')
             # 出力するテキスト
             print_text = '{}ラウンド終了。'.format(current_round)
             # テキストを出力
@@ -1127,7 +1161,7 @@ def match(DICE,DICE_TABLE,STATUS,DOWN,STRONG_DOWN,KNOCKDOWN_TYPE,knockdown_type,
                 # 採点
                 blue_boxer,red_boxer,log_text = scoring(blue_boxer,red_boxer,log_text)
                 # 出力するテキスト
-                print_text = '最終ラウンド終了。判定に入ります。'
+                print_text = '「最終ラウンド終了となりました。これより判定に入ります」'
                 # テキストを出力
                 print(print_text)
                 # ログにテキストを追加
@@ -1143,15 +1177,7 @@ def match(DICE,DICE_TABLE,STATUS,DOWN,STRONG_DOWN,KNOCKDOWN_TYPE,knockdown_type,
                     # 赤のconclusionを'判定'にする
                     red_boxer.conclusion = '判定'
                     # 出力するテキスト
-                    print_text = '{}コーナー：{}：{}ポイント\n{}コーナー：{}：{}ポイント'.format(blue_boxer.corner,blue_boxer.name,blue_boxer.point,red_boxer.corner,red_boxer.name,red_boxer.point)
-                    # テキストを出力
-                    print(print_text)
-                    # ログにテキストを追加
-                    log_text.append(print_text)
-                    # 入力を待つ
-                    input()
-                    # 出力するテキスト
-                    print_text = '{}コーナー・{}選手の判定勝利。'.format(blue_boxer.corner,blue_boxer.name)
+                    print_text = '{}コーナー・{}選手の判定勝利です！！'.format(blue_boxer.corner,blue_boxer.name)
                     # テキストを出力
                     print(print_text)
                     # ログにテキストを追加
@@ -1178,15 +1204,7 @@ def match(DICE,DICE_TABLE,STATUS,DOWN,STRONG_DOWN,KNOCKDOWN_TYPE,knockdown_type,
                     # 青のconclusionを'判定'にする
                     blue_boxer.conclusion = '判定'
                     # 出力するテキスト
-                    print_text = '{}コーナー：{}：{}ポイント\n{}コーナー：{}：{}ポイント'.format(blue_boxer.corner,blue_boxer.name,blue_boxer.point,red_boxer.corner,red_boxer.name,red_boxer.point)
-                    # テキストを出力
-                    print(print_text)
-                    # ログにテキストを追加
-                    log_text.append(print_text)
-                    # 入力を待つ
-                    input()
-                    # 出力するテキスト
-                    print_text = '{}コーナー・{}選手の判定勝利。'.format(red_boxer.corner,red_boxer.name)
+                    print_text = '{}コーナー・{}選手の判定勝利です！！'.format(red_boxer.corner,red_boxer.name)
                     # テキストを出力
                     print(print_text)
                     # ログにテキストを追加
@@ -1238,24 +1256,28 @@ def match(DICE,DICE_TABLE,STATUS,DOWN,STRONG_DOWN,KNOCKDOWN_TYPE,knockdown_type,
                 # インターバル
                 blue_boxer,red_boxer,log_text = interval(blue_boxer,red_boxer,log_text)
                 # 採点
-                blue_boxer,red_boxer,log_text = scoring(blue_boxer,red_boxer,log_text)   
+                blue_boxer,red_boxer,log_text = scoring(blue_boxer,red_boxer,log_text)
+                # ログに空白行を追加
+                log_text.append('')
         # 5ターン目未満の場合
         else:
+            # ログに空白行を追加
+            log_text.append('')
             # 現在のターンに1加算
             current_turn += 1
 
 # メイン関数
-def main(DICE,DICE_TABLE,STATUS,DOWN,STRONG_DOWN,KNOCKDOWN_TYPE):
+def main(DICE,DICE_TABLE,FAV_BLOW,STATUS,DOWN,STRONG_DOWN,KNOCKDOWN_TYPE):
     FIGHT_LOG_DIR = make_folder()
     while True:
-        blue_boxer = make_boxer('青')
-        red_boxer = make_boxer('赤')
+        blue_boxer = make_boxer(FAV_BLOW,'青')
+        red_boxer = make_boxer(FAV_BLOW,'赤')
         knockdown_type = decide_knockdown_type(KNOCKDOWN_TYPE)
         round_num = decide_round_num()
-        match(DICE,DICE_TABLE,STATUS,DOWN,STRONG_DOWN,KNOCKDOWN_TYPE,knockdown_type,round_num,FIGHT_LOG_DIR,blue_boxer,red_boxer)
+        match(DICE,DICE_TABLE,FAV_BLOW,STATUS,DOWN,STRONG_DOWN,KNOCKDOWN_TYPE,knockdown_type,round_num,FIGHT_LOG_DIR,blue_boxer,red_boxer)
         continue_or_exit = input("もう1試合やりますか？　続ける場合「q」以外のキーを、終了する場合「q」を入力してください。:")
-        if continue_or_exit == 'q':
+        if continue_or_exit == 'q' or continue_or_exit == 'ｑ':
             break
 
 if __name__ == '__main__':
-    main(DICE,DICE_TABLE,STATUS,DOWN,STRONG_DOWN,KNOCKDOWN_TYPE)
+    main(DICE,DICE_TABLE,FAV_BLOW,STATUS,DOWN,STRONG_DOWN,KNOCKDOWN_TYPE)
