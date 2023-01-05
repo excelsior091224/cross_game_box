@@ -1,5 +1,7 @@
 __pycache__/
 fight_log/
+.pytest_cache/
 dice_status.csv
 rule.txt
 test.py
+test2.py
