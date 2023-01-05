@@ -3,7 +3,9 @@
 ## このスクリプトについて
 
 このスクリプトは、[へいぞ](https://www.pixiv.net/users/75527577)氏考案の女子ボクシングアナログゲーム「[Cross Game Box](https://heizo2019.jimdofree.com/guest/crossgameboxrule/)」用のゲームスクリプトです。
+
 Windowsからはcross_game_box.exe(Pyinstallerでコンパイルしたもの)を実行するか、Python3（3.9及び3.11で検証済み）をインストールした上でcross_game_box_start.bat（バッチファイル）を実行してください。
+
 Mac及びLinuxではPython3をインストールした上でcross_game_box_start.shに実行権限を与えて実行してください。
 
 ## 遊び方
@@ -27,6 +29,9 @@ Mac及びLinuxではPython3をインストールした上でcross_game_box_start
     12. 12ラウンド
 
 ここまで入力したら試合が開始します。
+
 試合中はキーボードのいずれかのキー（Enterキー等）を入力することで試合が進行します。
+
 試合が終了したらもう1試合行うかというメッセージが出てくるので終了する場合は「q」（全角/半角のどちらでも大丈夫です）を入力し、もう1試合行う場合はそれ以外のキーを入力してください。
+
 試合ログは起動時に自動的に作成されるfight_logディレクトリにtxt形式で試合終了時に保存されます。
