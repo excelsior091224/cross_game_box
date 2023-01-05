@@ -39,7 +39,7 @@ def export_log(log_text,file_name):
 
 # ボクサーのクラス
 class Boxer:
-    def __init__(self, corner, name, fav_blow):
+    def __init__(self, corner, name, FAV_BLOW, fav_blow):
         # ボクサーのコーナー（赤or青）
         self.corner = corner
         # ボクサーの名前
@@ -60,6 +60,7 @@ class Boxer:
         # （負けた場合の）決着方法
         self.conclusion = ''
         print('{}コーナー\n{}選手'.format(self.corner,self.name))
+        print('得意ブロー：{}'.format(FAV_BLOW[fav_blow]))
 
 # 状態出力
 def print_status(blue_boxer,red_boxer,log_text,STATUS):
@@ -313,7 +314,7 @@ def blue_downed(DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,ST
                 blue_boxer,log_text = DOWN['down_3'][dice_roll](blue_boxer,log_text)
             # 4回以上の場合
             else:
-                # DOWN['down_3_or_more']のダイス出目に応じた関数を実行する
+                # DOWN['down_4_or_more']のダイス出目に応じた関数を実行する
                 blue_boxer,log_text = DOWN['down_4_or_more'][dice_roll](blue_boxer,log_text)
     # フリーノックダウン制の場合
     else:
@@ -345,8 +346,15 @@ def blue_downed(DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,ST
                 blue_boxer,log_text = DOWN['down_3'][dice_roll](blue_boxer,log_text)
             # 4回以上の場合
             else:
-                # DOWN['down_3_or_more']のダイス出目に応じた関数を実行する
+                # DOWN['down_4_or_more']のダイス出目に応じた関数を実行する
                 blue_boxer,log_text = DOWN['down_4_or_more'][dice_roll](blue_boxer,log_text)
+    if blue_boxer.result == '':
+        # 出力するテキスト
+        print_text = '「試合再開です！」'
+        # テキストを出力
+        print(print_text)
+        # ログにテキストを追加
+        log_text.append(print_text)
     return blue_boxer,red_boxer,log_text
 
 # 赤コーナーダウン
@@ -404,7 +412,7 @@ def red_downed(DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,STR
                 red_boxer,log_text = DOWN['down_3'][dice_roll](red_boxer,log_text)
             # 4回以上の場合
             else:
-                # DOWN['down_3_or_more']のダイス出目に応じた関数を実行する
+                # DOWN['down_4_or_more']のダイス出目に応じた関数を実行する
                 red_boxer,log_text = DOWN['down_4_or_more'][dice_roll](red_boxer,log_text)
     # フリーノックダウン制の場合
     else:
@@ -436,8 +444,15 @@ def red_downed(DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,DOWN,STR
                 red_boxer,log_text = DOWN['down_3'][dice_roll](red_boxer,log_text)
             # 4回以上の場合
             else:
-                # DOWN['down_3_or_more']のダイス出目に応じた関数を実行する
+                # DOWN['down_4_or_more']のダイス出目に応じた関数を実行する
                 red_boxer,log_text = DOWN['down_4_or_more'][dice_roll](red_boxer,log_text)
+    if red_boxer.result == '':
+        # 出力するテキスト
+        print_text = '「試合再開です！」'
+        # テキストを出力
+        print(print_text)
+        # ログにテキストを追加
+        log_text.append(print_text)
     return blue_boxer,red_boxer,log_text
 
 # 青コーナー強烈ダウン
@@ -501,6 +516,13 @@ def blue_strong_downed(DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,
             log_text.append(print_text)
             # STRONG_DOWNのダイス出目に応じた関数を実行する
             blue_boxer,log_text = STRONG_DOWN[dice_roll](blue_boxer,log_text)
+    if blue_boxer.result == '':
+        # 出力するテキスト
+        print_text = '「試合再開です！」'
+        # テキストを出力
+        print(print_text)
+        # ログにテキストを追加
+        log_text.append(print_text)
     return blue_boxer,red_boxer,log_text
 
 # 赤コーナー強烈ダウン
@@ -564,6 +586,13 @@ def red_strong_downed(DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,D
             input()
             # STRONG_DOWNのダイス出目に応じた関数を実行する
             red_boxer,log_text = STRONG_DOWN[dice_roll](red_boxer,log_text)
+    if red_boxer.result == '':
+        # 出力するテキスト
+        print_text = '「試合再開です！」'
+        # テキストを出力
+        print(print_text)
+        # ログにテキストを追加
+        log_text.append(print_text)
     return blue_boxer,red_boxer,log_text
 
 # ダブルノックダウン
@@ -577,7 +606,7 @@ def double_knock_down(DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,D
     # 試合トータルでのダウン数に1加算
     red_boxer.total_down_num += 1
     # 出力するテキスト
-    print_text = '両者、ダブルノックダウン。'
+    print_text = '「{blue_name}選手のパンチと{red_name}選手のパンチがお互いにヒットしました！」\n「両者ダウン！ダブルノックダウンです！」'.format(blue_name=blue_boxer.name,red_name=red_boxer.name)
     # テキストを出力
     print(print_text)
     # ログにテキストを追加
@@ -596,50 +625,60 @@ def double_knock_down(DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,D
         else:
             # 青コーナー
             # 12面ダイス1個を振る
-            dice_roll = sum(DICE.throw_dice())
+            blue_dice_roll = sum(DICE.throw_dice())
             # 出力するテキスト
-            print_text = '{}コーナー・ダイス：{}'.format(blue_boxer.corner,dice_roll)
+            print_text = '{}コーナー・ダイス：{}'.format(blue_boxer.corner,blue_dice_roll)
             # テキストを出力
             print(print_text)
             # ログにテキストを追加
             log_text.append(print_text)
             # 入力を待つ
             input()
+            # 赤コーナー
+            # 12面ダイス1個を振る
+            red_dice_roll = sum(DICE.throw_dice())
+            # 出力するテキスト
+            print_text = '{}コーナー・ダイス：{}'.format(red_boxer.corner,red_dice_roll)
+            # テキストを出力
+            print(print_text)
+            # ログにテキストを追加
+            log_text.append(print_text)
+            # 入力を待つ
+            input()
+            # 青コーナー
             # トータルでのダウン数が1回の場合
             if blue_boxer.total_down_num == 1:
                 # DOWN['down_1']のダイス出目に応じた関数を実行する
-                blue_boxer,log_text = DOWN['down_1'][dice_roll](blue_boxer,log_text)
+                blue_boxer,log_text = DOWN['down_1'][blue_dice_roll](blue_boxer,log_text)
             # 2回の場合
             elif blue_boxer.total_down_num == 2:
                 # DOWN['down_2']のダイス出目に応じた関数を実行する
-                blue_boxer,log_text = DOWN['down_2'][dice_roll](blue_boxer,log_text)
-            # 3回以上の場合
+                blue_boxer,log_text = DOWN['down_2'][blue_dice_roll](blue_boxer,log_text)
+            # 3回の場合
+            elif blue_boxer.total_down_num == 3:
+                # DOWN['down_3']のダイス出目に応じた関数を実行する
+                blue_boxer,log_text = DOWN['down_3'][blue_dice_roll](blue_boxer,log_text)
+            # 4回以上の場合
             else:
-                # DOWN['down_3_or_more']のダイス出目に応じた関数を実行する
-                blue_boxer,log_text = DOWN['down_3_or_more'][dice_roll](blue_boxer,log_text)
+                # DOWN['down_4_or_more']のダイス出目に応じた関数を実行する
+                blue_boxer,log_text = DOWN['down_4_or_more'][blue_dice_roll](blue_boxer,log_text)
             # 赤コーナー
-            # 12面ダイス1個を振る
-            dice_roll = sum(DICE.throw_dice())
-            # 出力するテキスト
-            print_text = '{}コーナー・ダイス：{}'.format(red_boxer.corner,dice_roll)
-            # テキストを出力
-            print(print_text)
-            # ログにテキストを追加
-            log_text.append(print_text)
-            # 入力を待つ
-            input()
             # トータルでのダウン数が1回の場合
             if red_boxer.total_down_num == 1:
                 # DOWN['down_1']のダイス出目に応じた関数を実行する
-                red_boxer,log_text = DOWN['down_1'][dice_roll](red_boxer,log_text)
+                red_boxer,log_text = DOWN['down_1'][red_dice_roll](red_boxer,log_text)
             # 2回の場合
             elif red_boxer.total_down_num == 2:
                 # DOWN['down_2']のダイス出目に応じた関数を実行する
-                red_boxer,log_text = DOWN['down_2'][dice_roll](red_boxer,log_text)
-            # 3回以上の場合
+                red_boxer,log_text = DOWN['down_2'][red_dice_roll](red_boxer,log_text)
+            # 3回の場合
+            elif red_boxer.total_down_num == 3:
+                # DOWN['down_2']のダイス出目に応じた関数を実行する
+                red_boxer,log_text = DOWN['down_3'][red_dice_roll](red_boxer,log_text)
+            # 4回以上の場合
             else:
-                # DOWN['down_3_or_more']のダイス出目に応じた関数を実行する
-                red_boxer,log_text = DOWN['down_3_or_more'][dice_roll](red_boxer,log_text)
+                # DOWN['down_4_or_more']のダイス出目に応じた関数を実行する
+                red_boxer,log_text = DOWN['down_4_or_more'][red_dice_roll](red_boxer,log_text)
     # フリーノックダウン制の場合
     else:
         # 青コーナーの試合トータルでのダウン数が5回以上でTKO
@@ -651,52 +690,67 @@ def double_knock_down(DICE,knockdown_type,blue_boxer,red_boxer,log_text,STATUS,D
         else:
             # 青コーナー
             # 12面ダイス1個を振る
-            dice_roll = sum(DICE.throw_dice())
+            blue_dice_roll = sum(DICE.throw_dice())
             # 出力するテキスト
-            print_text = '{}コーナー・ダイス：{}'.format(blue_boxer.corner,dice_roll)
+            print_text = '{}コーナー・ダイス：{}'.format(blue_boxer.corner,blue_dice_roll)
             # テキストを出力
             print(print_text)
             # ログにテキストを追加
             log_text.append(print_text)
-            # 入力を待つ
-            input()
-            # トータルでのダウン数が1回の場合
-            if blue_boxer.total_down_num == 1:
-                # DOWN['down_1']のダイス出目に応じた関数を実行する
-                blue_boxer,log_text = DOWN['down_1'][dice_roll](blue_boxer,log_text)
-            # 2回の場合
-            elif blue_boxer.total_down_num == 2:
-                # DOWN['down_2']のダイス出目に応じた関数を実行する
-                blue_boxer,log_text = DOWN['down_2'][dice_roll](blue_boxer,log_text)
-            # 3回以上の場合
-            else:
-                # DOWN['down_3_or_more']のダイス出目に応じた関数を実行する
-                blue_boxer,log_text = DOWN['down_3_or_more'][dice_roll](blue_boxer,log_text)
             # 入力を待つ
             input()
             # 赤コーナー
             # 12面ダイス1個を振る
-            dice_roll = sum(DICE.throw_dice())
+            red_dice_roll = sum(DICE.throw_dice())
             # 出力するテキスト
-            print_text = '{}コーナー・ダイス：{}'.format(red_boxer.corner,dice_roll)
+            print_text = '{}コーナー・ダイス：{}'.format(red_boxer.corner,red_dice_roll)
             # テキストを出力
             print(print_text)
             # ログにテキストを追加
             log_text.append(print_text)
             # 入力を待つ
             input()
+            # 青コーナー
+            # トータルでのダウン数が1回の場合
+            if blue_boxer.total_down_num == 1:
+                # DOWN['down_1']のダイス出目に応じた関数を実行する
+                blue_boxer,log_text = DOWN['down_1'][blue_dice_roll](blue_boxer,log_text)
+            # 2回の場合
+            elif blue_boxer.total_down_num == 2:
+                # DOWN['down_2']のダイス出目に応じた関数を実行する
+                blue_boxer,log_text = DOWN['down_2'][blue_dice_roll](blue_boxer,log_text)
+            # 3回の場合
+            elif blue_boxer.total_down_num == 3:
+                # DOWN['down_3']のダイス出目に応じた関数を実行する
+                blue_boxer,log_text = DOWN['down_3'][blue_dice_roll](blue_boxer,log_text)
+            # 4回以上の場合
+            else:
+                # DOWN['down_4_or_more']のダイス出目に応じた関数を実行する
+                blue_boxer,log_text = DOWN['down_4_or_more'][blue_dice_roll](blue_boxer,log_text)
+            # 赤コーナー
             # トータルでのダウン数が1回の場合
             if red_boxer.total_down_num == 1:
                 # DOWN['down_1']のダイス出目に応じた関数を実行する
-                red_boxer,log_text = DOWN['down_1'][dice_roll](red_boxer,log_text)
+                red_boxer,log_text = DOWN['down_1'][red_dice_roll](red_boxer,log_text)
             # 2回の場合
             elif red_boxer.total_down_num == 2:
                 # DOWN['down_2']のダイス出目に応じた関数を実行する
-                red_boxer,log_text = DOWN['down_2'][dice_roll](red_boxer,log_text)
-            # 3回以上の場合
+                red_boxer,log_text = DOWN['down_2'][red_dice_roll](red_boxer,log_text)
+            # 3回の場合
+            elif red_boxer.total_down_num == 3:
+                # DOWN['down_2']のダイス出目に応じた関数を実行する
+                red_boxer,log_text = DOWN['down_3'][red_dice_roll](red_boxer,log_text)
+            # 4回以上の場合
             else:
-                # DOWN['down_3_or_more']のダイス出目に応じた関数を実行する
-                red_boxer,log_text = DOWN['down_3_or_more'][dice_roll](red_boxer,log_text)
+                # DOWN['down_4_or_more']のダイス出目に応じた関数を実行する
+                red_boxer,log_text = DOWN['down_4_or_more'][red_dice_roll](red_boxer,log_text)
+    if blue_boxer.result == '' and red_boxer.result == '':
+        # 出力するテキスト
+        print_text = '「試合再開です！」'
+        # テキストを出力
+        print(print_text)
+        # ログにテキストを追加
+        log_text.append(print_text)
     return blue_boxer,red_boxer,log_text
 
 # インターバル
@@ -882,7 +936,7 @@ def tko(downed_boxer,log_text):
 # カウント8で立つ
 def standup_8(downed_boxer,log_text):
     # 出力するテキスト
-    print_text = '「{name}選手、カウント8で立ち上がりました！　試合再開です！」'.format(name=downed_boxer.name)
+    print_text = '「{name}選手、カウント8で立ち上がりました！」'.format(name=downed_boxer.name)
     # テキストを出力
     print(print_text)
     # ログにテキストを追加
@@ -892,7 +946,7 @@ def standup_8(downed_boxer,log_text):
 # カウント9で立つ
 def standup_9(downed_boxer,log_text):
     # 出力するテキスト
-    print_text = '「{name}選手、カウント9で立ち上がりました！　試合再開です！」'.format(name=downed_boxer.name)
+    print_text = '「{name}選手、カウント9で立ち上がりました！」'.format(name=downed_boxer.name)
     # テキストを出力
     print(print_text)
     # ログにテキストを追加
@@ -954,8 +1008,7 @@ def make_boxer(FAV_BLOW,corner):
             if fav_blow < 0 or fav_blow > 3:
                 print('0から3で選択してください。')
             else:
-                boxer = Boxer(corner,name,fav_blow)
-                print('得意ブロー：{}'.format(FAV_BLOW[fav_blow]))
+                boxer = Boxer(corner,name,FAV_BLOW,fav_blow)
                 return boxer
 
 # ノックダウン方式決定関数
@@ -1079,7 +1132,7 @@ def match(DICE,DICE_TABLE,FAV_BLOW,STATUS,DOWN,STRONG_DOWN,KNOCKDOWN_TYPE,knockd
         input()
         if blue_boxer.result == '●' and red_boxer.result == '●':
             # 出力するテキスト
-            print_text = '両者、WKOで引き分け。'
+            print_text = '「試合終了です！」\n「ダブルノックアウトでドローとなりました！！」'
             # テキストを出力
             print(print_text)
             # ログにテキストを追加
