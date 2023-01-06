@@ -4,9 +4,9 @@
 
 このスクリプトは、[へいぞ](https://www.pixiv.net/users/75527577)氏考案の女子ボクシングアナログゲーム「[Cross Game Box](https://heizo2019.jimdofree.com/guest/crossgameboxrule/)」用のゲームスクリプトです。
 
-Windowsからはcross_game_box.exe(Pyinstallerでコンパイルしたもの)を実行するか、Python3（3.9及び3.11で検証済み）をインストールした上でcross_game_box_start.bat（バッチファイル）を実行してください。
+Windowsからはcross_game_box.exe(セキュリティソフト誤検知対策としてブートローダーをローカルの環境でビルドしたPyinstallerでコンパイルしたもの)を実行するか、Python3（3.9及び3.11で検証済み）をインストールした上でcross_game_box_start.bat（バッチファイル）を実行してください。
 
-Mac及びLinuxではPython3をインストールした上でcross_game_box_start.shに実行権限を与えて実行してください。
+Mac及びLinuxではPython3をインストールした上でcross_game_box_start.sh（シェルスクリプト）に実行権限を与えて実行してください。
 
 ## 遊び方
 
@@ -17,7 +17,7 @@ Mac及びLinuxではPython3をインストールした上でcross_game_box_start
     - 2:ボディブロー
     - 3:アッパーカット
 3. 青コーナーと同様に赤コーナーのボクサーの名前を入力してください。
-4. 青コーナーのボクサーの得意ブローを0～3の数字で選択してください。
+4. 青コーナーと同様に赤コーナーのボクサーの得意ブローを0～3の数字で選択してください。
 5. ノックダウン方式を次の2つから0もしくは1の数字で選択してください。
     - 0:3ノックダウン：1ラウンド中に3回ダウンしたらTKOとなります
     - 1:フリーノックダウン：1ラウンド中のダウン回数の制限はありません。ただし、試合中に合計5回ダウンしたらTKOとなります。
