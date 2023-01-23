@@ -981,7 +981,7 @@ STATUS = {
 
 # ダウン時ダイス
 DOWN = {
-    'down_1':{1:ko,2:ko,3:standup_8,4:standup_8,5:standup_8,6:standup_8,7:standup_8,8:standup_8,9:standup_8,10:standup_8,11:standup_9,12:standup_9},
+    'down_1':{1:ko,2:standup_8,3:standup_8,4:standup_8,5:standup_8,6:standup_8,7:standup_8,8:standup_8,9:standup_8,10:standup_8,11:standup_9,12:standup_9},
     'down_2':{1:ko,2:ko,3:tko,4:standup_8,5:standup_8,6:standup_8,7:standup_8,8:standup_8,9:standup_9,10:standup_9,11:standup_9,12:standup_9},
     'down_3':{1:ko,2:ko,3:ko,4:tko,5:standup_8,6:standup_8,7:standup_8,8:standup_8,9:standup_9,10:standup_9,11:standup_9,12:standup_9},
     'down_4_or_more':{1:ko,2:ko,3:ko,4:tko,5:tko,6:standup_8,7:standup_8,8:standup_8,9:standup_9,10:standup_9,11:standup_9,12:standup_9}
